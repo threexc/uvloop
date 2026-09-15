@@ -89,6 +89,17 @@ jobs:
         - {os: macos-latest, cibw_arch: x86_64}
         - {os: macos-latest, cibw_arch: universal2}
         - {os: ubuntu-22.04-arm, cibw_arch: aarch64}
+        - {os: ubuntu-24.04-riscv, cibw_arch: riscv64}
+        exclude:
+        # RISE registry only has riscv64 wheels for Python 3.12+
+        - build_target: {os: ubuntu-24.04-riscv, cibw_arch: riscv64}
+          python: cp38
+        - build_target: {os: ubuntu-24.04-riscv, cibw_arch: riscv64}
+          python: cp39
+        - build_target: {os: ubuntu-24.04-riscv, cibw_arch: riscv64}
+          python: cp310
+        - build_target: {os: ubuntu-24.04-riscv, cibw_arch: riscv64}
+          python: cp311
 
     defaults:
       run:
@@ -114,6 +125,7 @@ jobs:
         CIBW_BUILD: ${{ matrix.python }}-*
         CIBW_ARCHS: ${{ matrix.build_target.cibw_arch }}
         CIBW_TEST_SKIP: "*universal2:arm64"
+        CIBW_ENVIRONMENT: ${{ matrix.build_target.cibw_arch == 'riscv64' && 'PIP_EXTRA_INDEX_URL=https://pypi.riseproject.dev/simple/' || '' }}
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
       with:
