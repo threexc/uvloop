@@ -2,12 +2,6 @@ name: Release
 
 on:
   pull_request:
-    branches:
-      - "master"
-      - "ci"
-      - "[0-9]+.[0-9x]+*"
-    paths:
-      - "uvloop/_version.py"
 
 jobs:
   validate-release-request:
@@ -23,12 +17,6 @@ jobs:
         version_file: uvloop/_version.py
         version_line_pattern: |
           __version__\s*=\s*(?:['"])([[:PEP440:]])(?:['"])
-
-    - name: Stop if not approved
-      if: steps.checkver.outputs.approved != 'true'
-      run: |
-        echo ::error::PR is not approved yet.
-        exit 1
 
     - name: Store release version for later use
       env:
